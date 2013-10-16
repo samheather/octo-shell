@@ -37,31 +37,21 @@ int prompt() {
 		}
 		command[rid-1] = '\0';
 
-		printf("\n-%c-%i\n",command[10],(int)sizeof(command));
+		// Debug
+		//  printf("\n-%c-%i\n",command[10],(int)sizeof(command));
+		//  write(1,command,sizeof(command));
 
-		write(1,command,sizeof(command));
-
-		// printf("\n\n%s\n%i\n", command, rid);
-		// if (inputData[4] == 'e') {
-		// 	write(1,"yay",3);
-		// }
-
-		// if (command[4] == 'e') {
-		// 	write(1,"yay",3);
-		// }
-
-// 		switch (c) {
-// case '\0':
-//     printf("   \\0");
-//     break;
-
-		// write(1,command[3],sizeof(command[3]));
-		if (command == "exit") {
-			printf("EXIT EXIT EXIT");
-			write(1,"exit",sizeof("exit"));
+		if (strcmp(command, "exit") == 0) {
 			break;
 		}
-		break;
+
+		char *instruction;
+		char *parameter_1, *parameter_2;
+		instruction = strtok(command, '-');
+		parameter_1 = strtok(NULL, '-');
+		parameter_2 = strtok(NULL, '-');
+		write(1,parameter_1,sizeof(parameter_1));
+		//write(1,parameter_2,sizeof(parameter_2));
 	}
 
 	return 0;
