@@ -1,20 +1,18 @@
 #include <fcntl.h>
-#include <stdio.h>
+//#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 int main() {
-	//char initialPrompt[] = "Command: ";
-	//write(1, initialPrompt, sizeof(initialPrompt));
-
-	//outputText("tesst.txt");
-	//deleteFile("test.txt");
-	//writeToFile("test.txt", "Hello World");
+	char shellLoaded[] = "\n--------------------\nShell Loaded Sucessfully: "
+	"Octo-OS Shell V0.1\nCopyright (c) 2013 Sam Heather\nType \"help\""
+	"for help.";
+	write(1,shellLoaded,strlen(shellLoaded));
 	
 	prompt();
 
-	char shellExited[] = "\n\n\n--------------------\nShell exited\n";
-	write(1,shellExited,sizeof(shellExited));
+	char shellExited[] = "\n--------------------\n\n\nShell exited\n";
+	write(1,shellExited,strlen(shellExited));
 	return 0;
 }
 
@@ -51,8 +49,27 @@ int prompt() {
 		instruction = strtok(command, " ");
 		parameter_1 = strtok(NULL, " ");
 		parameter_2 = strtok(NULL, " ");
-		write(1,instruction,sizeof(instruction));
-		//write(1,parameter_2,sizeof(parameter_2));
+		
+		if (strcmp(instruction, "help") == 0) {
+			char docs[] = "Instructions: \
+			\n exit \
+			\n rm <file>, \
+			\n read <file>, \
+			\n write <file, \"text\">";
+			write(1,docs,strlen(docs));
+		}
+		else if (strcmp(instruction, "rm") == 0) {
+			deleteFile(parameter_1);
+		}
+		else if (strcmp(instruction, "read") == 0) {
+			outputText(parameter_1);
+		}
+		else if (strcmp(instruction, "write") == 0) {
+			writeToFile(parameter_1,parameter_2);
+		}
+		else {
+			write(1,"No such instruction",strlen("No such instruction"));
+		}
 	}
 
 	return 0;
@@ -75,9 +92,11 @@ int deleteFile(char file[]) {
 }
 
 int writeToFile(char file[], char inputText[]) {
+	char *withoutQuotes;
+	withoutQuotes = strtok(inputText, "\"");
 	int fid, writtenBytes;
 	fid = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	writtenBytes = write(fid, inputText, sizeof(inputText));
+	writtenBytes = write(fid, withoutQuotes, strlen(withoutQuotes));
 	close(fid);
 	return 0;
 }
