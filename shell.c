@@ -46,11 +46,12 @@ int prompt() {
 		}
 
 		char *instruction;
-		char *parameter_1, *parameter_2;
-		instruction = strtok(command, '-');
-		parameter_1 = strtok(NULL, '-');
-		parameter_2 = strtok(NULL, '-');
-		write(1,parameter_1,sizeof(parameter_1));
+		char *parameter_1;
+		char *parameter_2;
+		instruction = strtok(command, " ");
+		parameter_1 = strtok(NULL, " ");
+		parameter_2 = strtok(NULL, " ");
+		write(1,instruction,sizeof(instruction));
 		//write(1,parameter_2,sizeof(parameter_2));
 	}
 
