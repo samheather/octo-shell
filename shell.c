@@ -13,22 +13,28 @@ int main() {
 	
 	prompt();
 
-	write(1,"\nShell exited\n",sizeof("\nShell exited\n"));
+	char shellExited[] = "\n\n\n--------------------\nShell exited\n";
+	write(1,shellExited,sizeof(shellExited));
 	return 0;
 }
 
 int prompt() {
 	char initialPrompt[] = "\nCommand: ";
 	write(1,initialPrompt,sizeof(initialPrompt));
+
+	// Get Input
 	char inputData[256];
-	read(0,inputData,256);
-	int returnIndex = 0;
-	while (inputData[returnIndex] != "\n") {
-		printf(inputData[returnIndex]);
-		returnIndex++;
+	int rid;
+	rid = read(0,inputData,256);
+
+	// Strip input
+	char command[rid];
+	int i;
+	for (i = 0; i<=rid-2; i++) {
+		command[i] = inputData[i];
 	}
-	printf("returnIndex: %i", returnIndex);
-	write(1,inputData,3);
+	command[rid-1] = '\0';
+
 	return 0;
 }
 
