@@ -1,6 +1,6 @@
 #include <fcntl.h>
 #include <stdio.h>
-//#include <string.h>
+#include <string.h>
 #include <stdlib.h>
 
 int main() {
@@ -19,21 +19,50 @@ int main() {
 }
 
 int prompt() {
-	char initialPrompt[] = "\nCommand: ";
-	write(1,initialPrompt,sizeof(initialPrompt));
+	//write(1,string('a'),sizeof(string('a')));
+	while (1 == 1) {
+		char initialPrompt[] = "\nCommand: ";
+		write(1,initialPrompt,sizeof(initialPrompt));
 
-	// Get Input
-	char inputData[256];
-	int rid;
-	rid = read(0,inputData,256);
+		// Get Input
+		char inputData[256];
+		int rid;
+		rid = read(0,inputData,256);
 
-	// Strip input
-	char command[rid];
-	int i;
-	for (i = 0; i<=rid-2; i++) {
-		command[i] = inputData[i];
+		// Strip input
+		char command[rid];
+		int i;
+		for (i = 0; i<=rid-2; i++) {
+			command[i] = inputData[i];
+		}
+		command[rid-1] = '\0';
+
+		printf("\n-%c-%i\n",command[10],(int)sizeof(command));
+
+		write(1,command,sizeof(command));
+
+		// printf("\n\n%s\n%i\n", command, rid);
+		// if (inputData[4] == 'e') {
+		// 	write(1,"yay",3);
+		// }
+
+		// if (command[4] == 'e') {
+		// 	write(1,"yay",3);
+		// }
+
+// 		switch (c) {
+// case '\0':
+//     printf("   \\0");
+//     break;
+
+		// write(1,command[3],sizeof(command[3]));
+		if (command == "exit") {
+			printf("EXIT EXIT EXIT");
+			write(1,"exit",sizeof("exit"));
+			break;
+		}
+		break;
 	}
-	command[rid-1] = '\0';
 
 	return 0;
 }
