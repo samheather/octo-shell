@@ -5,14 +5,14 @@
 
 int main() {
 	char shellLoaded[] = "\n--------------------\nShell Loaded Sucessfully: "
-	"Octo-OS Shell V0.1\nCopyright (c) 2013 Sam Heather\nType \"help\""
+	"Octo-Shell V0.1\nCopyright (c) 2013 Sam Heather\nType \"help\""
 	"for help.";
-	write(1,shellLoaded,strlen(shellLoaded));
+	write(1,shellLoaded,stringLength(shellLoaded));
 	
 	prompt();
 
 	char shellExited[] = "\n--------------------\n\n\nShell exited\n";
-	write(1,shellExited,strlen(shellExited));
+	write(1,shellExited,stringLength(shellExited));
 	return 0;
 }
 
@@ -56,7 +56,7 @@ int prompt() {
 			\n rm <file>, \
 			\n read <file>, \
 			\n write <file, \"text\">";
-			write(1,docs,strlen(docs));
+			write(1,docs,stringLength(docs));
 		}
 		else if (strcmp(instruction, "rm") == 0) {
 			deleteFile(parameter_1);
@@ -68,11 +68,20 @@ int prompt() {
 			writeToFile(parameter_1,parameter_2);
 		}
 		else {
-			write(1,"No such instruction",strlen("No such instruction"));
+			write(1,"No such instruction",stringLength("No such instruction"));
 		}
 	}
 
 	return 0;
+}
+
+int stringLength(char *inputString) {
+	int count = 1;
+	while (*(inputString+1) != '\0') {
+		inputString = inputString + 1;
+		count++;
+	}
+	return count;
 }
 
 int outputText(char file[]) {
@@ -96,7 +105,7 @@ int writeToFile(char file[], char inputText[]) {
 	withoutQuotes = strtok(inputText, "\"");
 	int fid, writtenBytes;
 	fid = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	writtenBytes = write(fid, withoutQuotes, strlen(withoutQuotes));
+	writtenBytes = write(fid, withoutQuotes, stringLength(withoutQuotes));
 	close(fid);
 	return 0;
 }
