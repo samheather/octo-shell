@@ -1,7 +1,11 @@
 #include <fcntl.h>
-//#include <stdio.h>
+//#include <stdio.h>  // Hopefully do not need this again.
 #include <string.h>
 #include <stdlib.h>
+
+// For threading
+#include <unistd.h>
+#include <sys/wait.h>
 
 int main() {
 	char shellLoaded[] = "\n--------------------\nShell Loaded Sucessfully: "
@@ -55,7 +59,9 @@ int prompt() {
 			\n exit \
 			\n rm <file>, \
 			\n read <file>, \
-			\n write <file, \"text\">";
+			\n write <file, \"text\">, \
+			\n ls <path>\t\t\t\t(No spaces in path), \
+			\n e <other commands/parameters>\t\tRuns in new thread (ls only)";
 			write(1,docs,stringLength(docs));
 		}
 		else if (strcmp(instruction, "rm") == 0) {
@@ -66,6 +72,12 @@ int prompt() {
 		}
 		else if (strcmp(instruction, "write") == 0) {
 			writeToFile(parameter_1,parameter_2);
+		}
+		else if (strcmp(instruction, "ls") == 0) {
+			callLs(parameter_1);
+		}
+		else if (strcmp(instruction, "e") == 0) {
+			callInNewThread(instruction, parameter_1);
 		}
 		else {
 			write(1,"No such instruction",stringLength("No such instruction"));
@@ -108,4 +120,13 @@ int writeToFile(char file[], char inputText[]) {
 	writtenBytes = write(fid, withoutQuotes, stringLength(withoutQuotes));
 	close(fid);
 	return 0;
+}
+
+int callLs(char path[]) {
+	int pid, stat_loc;
+	pid = fork();
+	if (pid == 0) { execl("/bin/ls\0", path, NULL); }
+	else {
+		wait(&stat_loc);
+	}
 }
