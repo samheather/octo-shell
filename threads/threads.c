@@ -7,7 +7,7 @@
 struct thread_info {    /* Used as argument to thread_start() */
 	pthread_t thread_id;/* ID returned by pthread_create() */
 	char passedChar[2];
-	pthread_mutex_t passedCharMutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_t passedCharMutex;
 	pthread_cond_t conditionalSignal;
 };
 
@@ -24,14 +24,14 @@ static void *thread_1_start(void *arg) {
 }
 
 int main() {
-	struct thread_info tinfo;
+	struct thread_info tinfo = {.passedCharMutex = PTHREAD_MUTEX_INITIALIZER};
 	printf("Main thread id: %d\n", tinfo.thread_id);
-	
+
 	int s = pthread_create(&tinfo.thread_id,
 		NULL, // was address of attr, error as this was not initialised.
 		&thread_1_start,
 		&tinfo);
-	pthread_join(tinfo.thread_id,NULL);
+	//pthread_join(tinfo.thread_id,NULL);
 
 	while (1) {
 		printf("thread2 while ran");
