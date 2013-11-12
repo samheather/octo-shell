@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <unistd.h>
 
 struct thread_info {    /* Used as argument to thread_start() */
 	pthread_t thread_id;/* ID returned by pthread_create() */
@@ -19,6 +20,25 @@ static void *philo(void *arg) {
 	struct thread_info *myInfo = arg;
 	int philoId = myInfo->philoId;	
 	printf("Started thread id: %d, philoId: %d\n", (int)myInfo->thread_id, philoId);
+	int has[2] = {-1,-1};
+	while(1) {
+		int leftIndex, rightIndex;
+		if (1) {
+			leftIndex = myMod(philoId-1,4);
+			pthread_mutex_lock(&myInfo->forkMutexs[leftIndex]);
+		}
+		if (1) {
+			rightIndex = myMod(philoId+1,4);
+			pthread_mutex_lock(&myInfo->forkMutexs[rightIndex]);
+		}
+		printf("Philosopher %d eating with %d and %d\n", philoId, leftIndex, rightIndex);
+		sleep(2);
+		pthread_mutex_unlock(&myInfo->forkMutexs[leftIndex]);
+		pthread_mutex_unlock(&myInfo->forkMutexs[rightIndex]);
+	}
+		
+		
+		
 
 	/*
 	while (1) {
@@ -79,4 +99,10 @@ int main() {
 		pthread_mutex_unlock(&tinfo.passedCharMutex);
 		pthread_cond_signal(&tinfo.readyToReadWriteSignal);
 	}*/
+}
+
+int myMod(int a, int b) {
+	int ret = a % b;
+	if (ret < 0) { return ret+b; }
+	else { return ret; }
 }
