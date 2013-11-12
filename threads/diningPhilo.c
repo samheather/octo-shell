@@ -5,6 +5,8 @@
 #include <pthread.h>
 #include <unistd.h>
 
+#define max(x, y) (((x) > (y)) ? (x) : (y))
+
 struct thread_info {    /* Used as argument to thread_start() */
 	pthread_t thread_id;/* ID returned by pthread_create() */
 	int *forks;
@@ -14,43 +16,28 @@ struct thread_info {    /* Used as argument to thread_start() */
 };
 	
 int forks[4] = {0,1,2,3};
-pthread_mutex_t forkMutexs[4];
+pthread_mutex_t forkMutexs[4] = { PTHREAD_MUTEX_INITIALIZER };
 
 static void *philo(void *arg) {
 	struct thread_info *myInfo = arg;
 	int philoId = myInfo->philoId;	
-	printf("Started thread id: %d, philoId: %d\n", (int)myInfo->thread_id, philoId);
 	int has[2] = {-1,-1};
 	while(1) {
-		int leftIndex, rightIndex;
-		if (1) {
-			leftIndex = myMod(philoId-1,4);
-			pthread_mutex_lock(&myInfo->forkMutexs[leftIndex]);
+		int firstIndex, secondIndex;
+		firstIndex = max(philoId,myMod(philoId-1,4));
+		pthread_mutex_lock(&myInfo->forkMutexs[firstIndex]);
+		if (firstIndex == philoId) {
+			secondIndex = myMod(philoId-1,4);
 		}
-		if (1) {
-			rightIndex = myMod(philoId+1,4);
-			pthread_mutex_lock(&myInfo->forkMutexs[rightIndex]);
+		else {
+			secondIndex = philoId;
 		}
-		printf("Philosopher %d eating with %d and %d\n", philoId, leftIndex, rightIndex);
+		pthread_mutex_lock(&myInfo->forkMutexs[secondIndex]);
+		printf("Philosopher %d eating with %d and %d\n", philoId, firstIndex, secondIndex);
 		sleep(2);
-		pthread_mutex_unlock(&myInfo->forkMutexs[leftIndex]);
-		pthread_mutex_unlock(&myInfo->forkMutexs[rightIndex]);
+		pthread_mutex_unlock(&myInfo->forkMutexs[firstIndex]);
+		pthread_mutex_unlock(&myInfo->forkMutexs[secondIndex]);
 	}
-		
-		
-		
-
-	/*
-	while (1) {
-		//printf("Child thread while ran");
-		pthread_mutex_lock(&myInfo->passedCharMutex);
-		while(myInfo->full) { pthread_cond_wait(&myInfo->readyToReadWriteSignal, 
-												&myInfo->passedCharMutex); }
-		int rid = read(0,myInfo->passedChar,2);
-		myInfo->full = 1;
-		pthread_mutex_unlock(&myInfo->passedCharMutex);
-		pthread_cond_signal(&myInfo->readyToReadWriteSignal);
-	} */
 	pthread_exit(0);
 }
 
