@@ -9,8 +9,6 @@ struct thread_info {    /* Used as argument to thread_start() */
 	char passedChar[2];
 	int full;
 	pthread_mutex_t passedCharMutex;
-	pthread_cond_t readyToReadSignal;
-	pthread_cond_t readyToWriteSignal;
 	pthread_cond_t readyToReadWriteSignal;
 };
 
@@ -32,8 +30,6 @@ static void *thread_1_start(void *arg) {
 
 int main() {
 	struct thread_info tinfo = {.passedCharMutex = PTHREAD_MUTEX_INITIALIZER,
-								.readyToReadSignal = PTHREAD_COND_INITIALIZER,
-								.readyToWriteSignal = PTHREAD_COND_INITIALIZER,
 								.readyToReadWriteSignal = PTHREAD_COND_INITIALIZER,
 								.full = 0};
 	printf("Main thread id: %d\n", (int)tinfo.thread_id);
