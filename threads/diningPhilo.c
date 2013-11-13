@@ -16,32 +16,33 @@ struct thread_info {    /* Used as argument to thread_start() */
 };
 	
 int forks[4] = {0,1,2,3};
-pthread_mutex_t forkMutexs[4] = { PTHREAD_MUTEX_INITIALIZER };
+pthread_mutex_t forkMutexs[4] = 
+	{ PTHREAD_MUTEX_INITIALIZER, PTHREAD_MUTEX_INITIALIZER, PTHREAD_MUTEX_INITIALIZER, PTHREAD_MUTEX_INITIALIZER };
 
 static void *philo(void *arg) {
 	struct thread_info *myInfo = arg;
-	int philoId = myInfo->philoId;	
-	int has[2] = {-1,-1};
+	int philoId = myInfo->philoId;
 	while(1) {
 		int firstIndex, secondIndex;
 		firstIndex = max(philoId,myMod(philoId-1,4));
-		pthread_mutex_lock(&myInfo->forkMutexs[firstIndex]);
+		pthread_mutex_lock(&forkMutexs[firstIndex]);
 		if (firstIndex == philoId) {
 			secondIndex = myMod(philoId-1,4);
 		}
 		else {
 			secondIndex = philoId;
 		}
-		pthread_mutex_lock(&myInfo->forkMutexs[secondIndex]);
+		pthread_mutex_lock(&forkMutexs[secondIndex]);
 		printf("Philosopher %d eating with %d and %d\n", philoId, firstIndex, secondIndex);
 		sleep(2);
-		pthread_mutex_unlock(&myInfo->forkMutexs[firstIndex]);
-		pthread_mutex_unlock(&myInfo->forkMutexs[secondIndex]);
+		pthread_mutex_unlock(&forkMutexs[secondIndex]);
+		pthread_mutex_unlock(&forkMutexs[firstIndex]);
 	}
 	pthread_exit(0);
 }
 
 int main() {
+	printf("\n\n%d\n\n", -7%4);
 	printf("Main thread id: %d\n", (int)pthread_self());
 
 	struct thread_info thread_info_p0 = {.forks = forks,
