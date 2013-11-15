@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 
 // random new comment
+// this is a second comment
 
 int main() {
 	char shellLoaded[] = "\n--------------------\nShell Loaded Sucessfully: "
