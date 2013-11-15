@@ -7,10 +7,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-// random new commentS
-// this is a third comment3
-// this is a second commentS
-
 int main() {
 	char shellLoaded[] = "\n--------------------\nShell Loaded Sucessfully: "
 	"Octo-Shell V0.1\nCopyright (c) 2013 Sam Heather\nType \"help\""
