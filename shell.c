@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 
 // random new comment
+// hello
 // this is a second comment
 
 int main() {
