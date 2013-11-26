@@ -8,16 +8,15 @@ void* global;
 struct node {
 	struct node* left;
 	struct node* right;
-//	int value;
 	int status; // 0 = empty, 1 = has children, 2 = node full
 };
 
-int findAvailable(int requestedSpace, struct node *memoryMapNode, void* returnedPointer, int calls) {
+int findAvailable(int requestedSpace, struct node *memoryMapNode, void** returnedPointer, int calls) {
 	int currentNodeSpace = globalMemorySize/pow(2,(calls-1));
 	printf("Called with callid: %d, nodeStatus: %d, memoryRequested: %d, currentNodeSpace: %d  << WHY 40???? \n",
 		calls, memoryMapNode->status, requestedSpace, currentNodeSpace);
 	// If node full, or requested > node size, return error.
-	if (memoryMapNode->status == 2 | requestedSpace > currentNodeSpace) {
+	if (memoryMapNode->status == 2 || requestedSpace > currentNodeSpace) {
 		return 1;
 	}
 	// Else if node empty, and appropriate size, allocate memory.
@@ -29,10 +28,10 @@ int findAvailable(int requestedSpace, struct node *memoryMapNode, void* returned
 		// else if node is too big, create left and right and then recurse on left.
 		else {
 			// create left and right nodes in tree
-			struct node newLeftNode = {.left = 0, .right = 0, .status = 0};
-			struct node newRightNode = {.left = 0, .right = 0, .status = 0};
-			struct node* newLeftNodePointer = &newLeftNode;
-			struct node* newRightNodePointer = &newRightNode; // This + prev 3 - valid, or memory lost?
+			struct node* newLeftNodePointer = malloc(sizeof(struct node));
+			struct node* newRightNodePointer = malloc(sizeof(struct node));
+			*newLeftNodePointer = (struct node){.left = 0, .right = 0, .status = 0};
+			*newRightNodePointer = (struct node){.left = 0, .right = 0, .status = 0};
 			memoryMapNode->left = newLeftNodePointer;
 			memoryMapNode->right = newRightNodePointer;
 			// Adjust memoryMapNode status
