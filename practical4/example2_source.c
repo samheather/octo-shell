@@ -10,6 +10,9 @@ typedef struct data
   int age;
 } data;
 
+// I couldn't understand what was happening in terms of the handler funciton.
+// or what line 52 would do.  Why woulnd't it be SIGURS1?
+
 
 /* Shouldnt really use of printf/fprintf in the below because you're not
 really meant to make system calls in a handler. In most cases such a 
@@ -32,12 +35,12 @@ void func(data *p)
 
    /* Establish the signal handler. */
    sigfillset (&block_mask);
-   usr_action.sa_handler = sig_func;;
+   usr_action.sa_handler = sig_func;  // Sets handler
    usr_action.sa_mask = block_mask;
    usr_action.sa_flags = 0;
    sigaction(SIGUSR1, &usr_action, NULL);
 
-   sleep(3); // Sleep to catch the signal
+   sleep(3); // Sleep to catch the signal.
 }
 
 int main()
@@ -48,6 +51,7 @@ int main()
   data *ptr = &d;
 
   //signal(SIGSEGV,sig_func); // Register signal handler before going multithread
+  							// change to SIGUSR1?
 
   pthread_attr_init(&attr);
   pthread_create(&tid,&attr,(void*)func,ptr);
