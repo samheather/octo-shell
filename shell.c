@@ -126,6 +126,7 @@ int callLs(char path[]) {
 	int pid, stat_loc;
 	pid = fork();
 	if (pid == 0) { execl("/bin/ls\0", path, NULL); }
+	// if (pid == 0) { execl("ls", "/", NULL); }
 	else {
 		wait(&stat_loc);
 	}
